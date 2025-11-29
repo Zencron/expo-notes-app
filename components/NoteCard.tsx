@@ -2,6 +2,7 @@ import { IconSymbol } from '@/components/ui/icon-symbol';
 import { Colors } from '@/constants/Colors';
 import { Note, useNotes } from '@/context/NoteContext';
 import { useColorScheme } from '@/hooks/use-color-scheme';
+import { useRouter } from 'expo-router';
 import React from 'react';
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
@@ -38,12 +39,19 @@ export const NoteCard: React.FC<NoteCardProps> = ({ note }) => {
     );
   };
 
+  const router = useRouter();
+
+  const handlePress = () => {
+    router.push(`/note/${note.id}` as any);
+  };
+
   return (
     <View style={[styles.card, { backgroundColor: theme.cardBackground }]}>
-      <View style={styles.contentContainer}>
-        <Text style={[styles.content, { color: theme.text }]}>{truncatedContent}</Text>
+      <TouchableOpacity onPress={handlePress} style={styles.contentContainer}>
+        <Text style={[styles.cardTitle, { color: theme.text }]} numberOfLines={1}>{note.title || 'Untitled'}</Text>
+        <Text style={[styles.content, { color: theme.textSecondary }]} numberOfLines={2}>{truncatedContent}</Text>
         <Text style={[styles.date, { color: theme.textSecondary }]}>{formattedDate}</Text>
-      </View>
+      </TouchableOpacity>
       <TouchableOpacity onPress={handleDelete} style={styles.deleteButton}>
         <IconSymbol name="trash" size={20} color={theme.textSecondary} />
       </TouchableOpacity>
@@ -70,11 +78,16 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
   },
+  cardTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    marginBottom: 4,
+  },
   content: {
-    fontSize: 16,
-    fontWeight: '500',
+    fontSize: 14,
+    fontWeight: '400',
     marginBottom: 8,
-    lineHeight: 22,
+    lineHeight: 20,
   },
   date: {
     fontSize: 12,

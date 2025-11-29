@@ -6,13 +6,14 @@ export type Category = 'Work and Study' | 'Life' | 'Health and Well-being';
 export interface Note {
   id: string;
   category: Category;
+  title: string;
   content: string;
   createdAt: number;
 }
 
 interface NoteContextType {
   notes: Note[];
-  addNote: (category: Category, content: string) => Promise<void>;
+  addNote: (category: Category, title: string, content: string) => Promise<void>;
   deleteNote: (id: string) => Promise<void>;
   deleteAllNotes: () => Promise<void>;
   refreshNotes: () => Promise<void>;
@@ -50,10 +51,11 @@ export const NoteProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const addNote = async (category: Category, content: string) => {
+  const addNote = async (category: Category, title: string, content: string) => {
     const newNote: Note = {
       id: Date.now().toString(),
       category,
+      title: title || 'Untitled',
       content,
       createdAt: Date.now(),
     };

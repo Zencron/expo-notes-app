@@ -13,6 +13,7 @@ export default function CreateNoteScreen() {
   const theme = Colors[colorScheme ?? 'light'];
   
   const [category, setCategory] = useState<Category>('Work and Study');
+  const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
 
   const categories: Category[] = ['Work and Study', 'Life', 'Health and Well-being'];
@@ -23,7 +24,8 @@ export default function CreateNoteScreen() {
       return;
     }
     
-    await addNote(category, content);
+    await addNote(category, title, content);
+    setTitle(''); // Clear title
     setContent(''); // Clear input
     router.push('/'); // Navigate to Home
   };
@@ -64,6 +66,15 @@ export default function CreateNoteScreen() {
               </TouchableOpacity>
             ))}
           </View>
+
+          <Text style={[styles.label, { color: theme.textSecondary }]}>Title</Text>
+          <TextInput
+            style={[styles.titleInput, { color: theme.text, backgroundColor: theme.cardBackground }]}
+            placeholder="Note Title"
+            placeholderTextColor={theme.textSecondary}
+            value={title}
+            onChangeText={setTitle}
+          />
 
           <Text style={[styles.label, { color: theme.textSecondary }]}>Content</Text>
           <View style={[styles.inputContainer, { backgroundColor: theme.cardBackground }]}>
@@ -140,6 +151,18 @@ const styles = StyleSheet.create({
   },
   categoryText: {
     fontSize: 14,
+  },
+  titleInput: {
+    borderRadius: 12,
+    padding: 16,
+    fontSize: 18,
+    fontWeight: '600',
+    marginBottom: 24,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 2,
   },
   inputContainer: {
     borderRadius: 16,
