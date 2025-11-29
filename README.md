@@ -17,7 +17,7 @@ A simple Notes application built with React Native (Expo) and TypeScript.
 - **React**: `19.1.0`
 - **TypeScript**: `~5.9.2`
 - **Navigation**: `expo-router` `~6.0.15`
-- **Storage**: `@react-native-async-storage/async-storage`
+- **Storage**: `@react-native-async-storage/async-storage` `^2.2.0`
 
 ## Getting Started
 
