@@ -1,13 +1,17 @@
-import { IconSymbol } from '@/components/ui/icon-symbol';
+import { Colors } from '@/constants/Colors';
 import { Category, useNotes } from '@/context/NoteContext';
+import { useColorScheme } from '@/hooks/use-color-scheme';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { Alert, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-export default function NewNoteScreen() {
+export default function CreateNoteScreen() {
   const router = useRouter();
   const { addNote } = useNotes();
+  const colorScheme = useColorScheme();
+  const theme = Colors[colorScheme ?? 'light'];
+  
   const [category, setCategory] = useState<Category>('Work and Study');
   const [content, setContent] = useState('');
 
@@ -20,17 +24,15 @@ export default function NewNoteScreen() {
     }
     
     await addNote(category, content);
-    router.back();
+    setContent(''); // Clear input
+    router.push('/'); // Navigate to Home
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-          <IconSymbol name="chevron.left" size={24} color="#333" />
-        </TouchableOpacity>
-        <Text style={styles.title}>New Note</Text>
-        <TouchableOpacity onPress={handleSave} style={styles.saveButton}>
+        <Text style={[styles.title, { color: theme.text }]}>New Note</Text>
+        <TouchableOpacity onPress={handleSave} style={[styles.saveButton, { backgroundColor: theme.tint }]}>
           <Text style={styles.saveText}>Save</Text>
         </TouchableOpacity>
       </View>
@@ -39,21 +41,23 @@ export default function NewNoteScreen() {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.content}
       >
-        <ScrollView>
-          <Text style={styles.label}>Category</Text>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <Text style={[styles.label, { color: theme.textSecondary }]}>Category</Text>
           <View style={styles.categoryContainer}>
             {categories.map((cat) => (
               <TouchableOpacity
                 key={cat}
                 style={[
                   styles.categoryChip,
-                  category === cat && styles.categoryChipSelected
+                  { backgroundColor: theme.cardBackground, borderColor: theme.border },
+                  category === cat && { backgroundColor: theme.tint + '15', borderColor: theme.tint }
                 ]}
                 onPress={() => setCategory(cat)}
               >
                 <Text style={[
                   styles.categoryText,
-                  category === cat && styles.categoryTextSelected
+                  { color: theme.textSecondary },
+                  category === cat && { color: theme.tint, fontWeight: '600' }
                 ]}>
                   {cat}
                 </Text>
@@ -61,18 +65,19 @@ export default function NewNoteScreen() {
             ))}
           </View>
 
-          <Text style={styles.label}>Content</Text>
-          <View style={styles.inputContainer}>
+          <Text style={[styles.label, { color: theme.textSecondary }]}>Content</Text>
+          <View style={[styles.inputContainer, { backgroundColor: theme.cardBackground }]}>
             <TextInput
-              style={styles.input}
+              style={[styles.input, { color: theme.text }]}
               multiline
               maxLength={200}
               placeholder="Write your note here..."
+              placeholderTextColor={theme.textSecondary}
               value={content}
               onChangeText={setContent}
               textAlignVertical="top"
             />
-            <Text style={styles.counter}>{content.length}/200</Text>
+            <Text style={[styles.counter, { color: theme.textSecondary }]}>{content.length}/200</Text>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -83,87 +88,77 @@ export default function NewNoteScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingVertical: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
-  },
-  backButton: {
-    padding: 5,
+    paddingVertical: 20,
   },
   title: {
-    fontSize: 20,
+    fontSize: 28,
     fontWeight: 'bold',
-    color: '#333',
   },
   saveButton: {
-    padding: 5,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
   },
   saveText: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#6200ee',
+    color: '#fff',
   },
   content: {
     flex: 1,
     padding: 20,
   },
   label: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: '600',
-    color: '#555',
-    marginBottom: 10,
-    marginTop: 10,
+    marginBottom: 12,
+    textTransform: 'uppercase',
+    letterSpacing: 1,
   },
   categoryContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 10,
-    marginBottom: 20,
+    marginBottom: 30,
   },
   categoryChip: {
     paddingHorizontal: 16,
-    paddingVertical: 8,
+    paddingVertical: 10,
     borderRadius: 20,
-    backgroundColor: '#f0f0f0',
     borderWidth: 1,
-    borderColor: '#e0e0e0',
-  },
-  categoryChipSelected: {
-    backgroundColor: '#e8eaf6',
-    borderColor: '#3f51b5',
   },
   categoryText: {
     fontSize: 14,
-    color: '#555',
-  },
-  categoryTextSelected: {
-    color: '#3f51b5',
-    fontWeight: '600',
   },
   inputContainer: {
-    borderWidth: 1,
-    borderColor: '#e0e0e0',
-    borderRadius: 12,
-    padding: 15,
-    backgroundColor: '#fafafa',
-    height: 200,
+    borderRadius: 16,
+    padding: 20,
+    height: 240,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.05,
+    shadowRadius: 10,
+    elevation: 2,
   },
   input: {
     flex: 1,
-    fontSize: 16,
-    color: '#333',
+    fontSize: 18,
+    lineHeight: 28,
   },
   counter: {
     textAlign: 'right',
-    color: '#999',
     fontSize: 12,
-    marginTop: 5,
+    marginTop: 10,
   },
 });

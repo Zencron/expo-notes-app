@@ -23,8 +23,8 @@ export default function HomeScreen() {
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>My Notes</Text>
-        <TouchableOpacity onPress={() => router.push('/new-note')} style={styles.addButton}>
-          <IconSymbol name="plus" size={24} color="#fff" />
+        <TouchableOpacity onPress={() => router.push('/settings')} style={styles.settingsButton}>
+          <IconSymbol name="gear" size={24} color="#333" />
         </TouchableOpacity>
       </View>
       
@@ -44,38 +44,31 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#F7F7F7', // Premium background
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 15,
+    paddingHorizontal: 24,
+    paddingVertical: 20,
     backgroundColor: '#fff',
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    borderBottomColor: 'rgba(0,0,0,0.05)',
   },
   title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#333',
+    fontSize: 32,
+    fontWeight: '800',
+    color: '#1a1a1a',
+    letterSpacing: -0.5,
   },
-  addButton: {
-    backgroundColor: '#6200ee',
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 4,
+  settingsButton: {
+    padding: 8,
+    backgroundColor: '#f5f5f5',
+    borderRadius: 12,
   },
   scrollContent: {
     padding: 20,
-    paddingBottom: 100, // Space for tab bar
+    paddingBottom: 100,
   },
 });

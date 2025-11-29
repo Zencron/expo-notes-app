@@ -1,4 +1,6 @@
+import { Colors } from '@/constants/Colors';
 import { Category, Note } from '@/context/NoteContext';
+import { useColorScheme } from '@/hooks/use-color-scheme';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { NoteCard } from './NoteCard';
@@ -9,13 +11,16 @@ interface CategorySectionProps {
 }
 
 export const CategorySection: React.FC<CategorySectionProps> = ({ category, notes }) => {
+  const colorScheme = useColorScheme();
+  const theme = Colors[colorScheme ?? 'light'];
+
   if (notes.length === 0) {
-    return null; // Don't render empty sections if desired, or render a placeholder
+    return null; 
   }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>{category}</Text>
+      <Text style={[styles.header, { color: theme.text }]}>{category}</Text>
       {notes.map(note => (
         <NoteCard key={note.id} note={note} />
       ))}
@@ -28,10 +33,10 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   header: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#1a1a1a',
+    fontSize: 18,
+    fontWeight: '700',
     marginBottom: 12,
     paddingLeft: 4,
+    letterSpacing: 0.5,
   },
 });
