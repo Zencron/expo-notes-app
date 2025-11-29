@@ -2,6 +2,7 @@ import { Tabs } from 'expo-router';
 import React from 'react';
 import { Platform } from 'react-native';
 
+import { FloatingTabButton } from '@/components/FloatingTabButton';
 import { HapticTab } from '@/components/haptic-tab';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { useColorScheme } from '@/hooks/use-color-scheme';
@@ -18,8 +19,16 @@ export default function TabLayout() {
         tabBarStyle: Platform.select({
           ios: {
             position: 'absolute',
+            borderTopWidth: 0,
+            elevation: 0,
+            height: 60,
           },
-          default: {},
+          default: {
+            borderTopWidth: 0,
+            elevation: 0,
+            height: 60,
+            backgroundColor: '#FFFFFF',
+          },
         }),
       }}>
       <Tabs.Screen
@@ -32,8 +41,8 @@ export default function TabLayout() {
       <Tabs.Screen
         name="create"
         options={{
-          title: 'Create',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="plus.circle.fill" color={color} />,
+          title: '',
+          tabBarButton: (props) => <FloatingTabButton {...props} />,
         }}
       />
       <Tabs.Screen
