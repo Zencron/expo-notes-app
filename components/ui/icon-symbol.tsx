@@ -22,6 +22,7 @@ const MAPPING = {
   'chart.bar.fill': 'bar-chart',
   'gear': 'settings',
   'chevron.left': 'chevron-left',
+  'trash': 'delete-outline',
 } as IconMapping;
 
 /**

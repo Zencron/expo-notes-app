@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 
 export type Category = 'Work and Study' | 'Life' | 'Health and Well-being';
 
@@ -13,6 +13,7 @@ export interface Note {
 interface NoteContextType {
   notes: Note[];
   addNote: (category: Category, content: string) => Promise<void>;
+  deleteNote: (id: string) => Promise<void>;
   deleteAllNotes: () => Promise<void>;
   refreshNotes: () => Promise<void>;
 }
@@ -60,6 +61,11 @@ export const NoteProvider = ({ children }: { children: ReactNode }) => {
     await saveNotes(updatedNotes);
   };
 
+  const deleteNote = async (id: string) => {
+    const updatedNotes = notes.filter(note => note.id !== id);
+    await saveNotes(updatedNotes);
+  };
+
   const deleteAllNotes = async () => {
     try {
       await AsyncStorage.removeItem(STORAGE_KEY);
@@ -74,7 +80,7 @@ export const NoteProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <NoteContext.Provider value={{ notes, addNote, deleteAllNotes, refreshNotes }}>
+    <NoteContext.Provider value={{ notes, addNote, deleteNote, deleteAllNotes, refreshNotes }}>
       {children}
     </NoteContext.Provider>
   );

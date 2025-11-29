@@ -1,8 +1,9 @@
+import { IconSymbol } from '@/components/ui/icon-symbol';
 import { Colors } from '@/constants/Colors';
-import { Note } from '@/context/NoteContext';
+import { Note, useNotes } from '@/context/NoteContext';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 interface NoteCardProps {
   note: Note;
@@ -20,12 +21,32 @@ export const NoteCard: React.FC<NoteCardProps> = ({ note }) => {
     ? note.content.substring(0, 20) + '...' 
     : note.content;
 
+  const { deleteNote } = useNotes();
+
+  const handleDelete = () => {
+    Alert.alert(
+      'Delete Note',
+      'Are you sure you want to delete this note?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { 
+          text: 'Delete', 
+          style: 'destructive', 
+          onPress: () => deleteNote(note.id) 
+        },
+      ]
+    );
+  };
+
   return (
     <View style={[styles.card, { backgroundColor: theme.cardBackground }]}>
       <View style={styles.contentContainer}>
         <Text style={[styles.content, { color: theme.text }]}>{truncatedContent}</Text>
         <Text style={[styles.date, { color: theme.textSecondary }]}>{formattedDate}</Text>
       </View>
+      <TouchableOpacity onPress={handleDelete} style={styles.deleteButton}>
+        <IconSymbol name="trash" size={20} color={theme.textSecondary} />
+      </TouchableOpacity>
       <View style={[styles.categoryIndicator, { backgroundColor: theme.tint }]} />
     </View>
   );
@@ -62,5 +83,10 @@ const styles = StyleSheet.create({
   categoryIndicator: {
     width: 6,
     height: '100%',
+  },
+  deleteButton: {
+    padding: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
